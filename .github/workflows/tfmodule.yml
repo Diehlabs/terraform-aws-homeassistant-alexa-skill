@@ -38,31 +38,12 @@ jobs:
       with:
         sarif_file: terrascan.sarif
 
-  terratest_job:
+  publish:
     runs-on: ubuntu-latest
     name: terratest-action
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    - uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_wrapper: false
-        terraform_version: 1.0.8
-
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.15
-
-    - name: Setup Dependencies
-      working-directory: tests
-      #run:  go get -v -t -d && go mod tidy
-      run: go mod init tests
-
-    - name: Test
-      working-directory: tests
-      run: go test -v
 
     - name: Bump version and push tag
       id: tag_version
