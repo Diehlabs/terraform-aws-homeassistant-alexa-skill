@@ -1,8 +1,10 @@
 # terraform-aws-homeassistant-alexa-skill
 
-This module will manage the AWS resources required for a custom Alexa skill specifically for use with Home Assistant.
+This module will manage the AWS resources required for a custom Alexa Smart Home skill specifically for use with Home Assistant.
 
-[More information here.](https://www.home-assistant.io/integrations/alexa.intent/)
+[More information here.](https://www.home-assistant.io/integrations/alexa.smart_home/)
+
+Home Assistant must have `alexa: smart_home:` configured, and the Lambda posts to `<BASE_URL>/api/alexa/smart_home` accordingly. Do not point this at `/api/alexa` — that's the separate, legacy `alexa.intent` custom-skill endpoint and won't understand Smart Home directives.
 
 Note that you must add the trigger configuration for the lambda manually at this time.
 
