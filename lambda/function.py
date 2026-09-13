@@ -1,4 +1,6 @@
-# Taken from https://gist.github.com/lpomfrey/97381cf4316553b03622c665ae3a47da
+# Adapted from https://gist.github.com/lpomfrey/97381cf4316553b03622c665ae3a47da
+# for the Alexa Smart Home Skill API (the gist's token extraction was written
+# for the legacy Alexa Custom Skill / intent format and has been adjusted).
 
 # -*- coding: utf-8 -*-
 import os
@@ -8,7 +10,7 @@ import urllib3
 
 _debug = os.environ.get('DEBUG', '').lower() in ('1', 'y', 'yes', 'true', 'on')
 
-_logger = logging.getLogger('HomeAssistant-Intents')
+_logger = logging.getLogger('HomeAssistant-SmartHome')
 _logger.setLevel(logging.DEBUG if _debug else logging.INFO)
 
 
@@ -20,10 +22,14 @@ def lambda_handler(event, context):
     base_url = os.environ.get('BASE_URL')
     assert base_url is not None, 'Please set BASE_URL environment variable'
 
-    try:
-        token = event.get('session', {}).get('user', {}).get('accessToken')
-    except AttributeError:
-        token = None
+    # Smart Home directives carry the bearer token in the directive's scope --
+    # under `payload.scope` for Discovery, or `endpoint.scope` for every other
+    # directive type (device commands, state reports, etc.)
+    directive = event.get('directive', {})
+    scope = directive.get('payload', {}).get('scope') or directive.get(
+        'endpoint', {}
+    ).get('scope', {})
+    token = scope.get('token')
 
     if token is None and _debug:
         token = os.environ.get('LONG_LIVED_ACCESS_TOKEN')
