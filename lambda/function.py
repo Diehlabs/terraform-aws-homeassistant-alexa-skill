@@ -39,7 +39,7 @@ def lambda_handler(event, context):
 
     response = http.request(
         'POST',
-        '{}/api/alexa'.format(base_url),
+        '{}/api/alexa/smart_home'.format(base_url),
         headers={
             'Authorization': 'Bearer {}'.format(token),
             'Content-Type': 'application/json',
